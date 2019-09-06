@@ -1,0 +1,56 @@
+const ring = new Audio('end.mp3');
+
+export function tick(prevState) {
+  const { status, workTime, breakTime, timeLeft } = prevState;
+
+  if (status === 'stoppedWork' || status === 'stoppedBreak') {
+    return {};
+  }
+
+  if (status === 'work' && timeLeft === 0) {
+    ring.play();
+
+    return {
+      status: 'break',
+      timeLeft: breakTime,
+    };
+  }
+
+  if (status === 'break' && timeLeft === 0) {
+    ring.play();
+
+    return {
+      status: 'stoppedWork',
+      timeLeft: workTime,
+    };
+  }
+
+  return {
+    timeLeft: timeLeft - 1,
+  };
+}
+
+export function clickDecreaseWorkTime(prevState) {
+  const { workTime } = prevState;
+
+  if (workTime <= 60) {
+    return {};
+  }
+
+  return {
+    workTime: workTime - 60,
+    timeLeft: workTime - 60,
+  };
+}
+
+
+export function clickIncreaseWorkTime(prevState) {
+  const { workTime } = prevState;
+
+  return {
+    workTime: workTime + 60,
+    timeLeft: workTime + 60,
+  };
+}
+
+
